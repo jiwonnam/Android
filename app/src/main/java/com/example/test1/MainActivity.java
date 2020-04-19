@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Intent intent = getIntent(); // get intent from Login_Activity
-        final String userID = intent.getStringExtra("userID");
+        final String userEmail = intent.getStringExtra("userEmail");
         // String userPass = intent.getStringExtra("userPass");
 
         bottomNavigationView = findViewById(R.id.bottomNavi);
@@ -46,19 +46,19 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (menuItem.getItemId()) {
                     case R.id.action_home:
-                        setFrag(0, userID);
+                        setFrag(0, userEmail);
                         break;
                     case R.id.action_today:
-                        setFrag(1, userID);
+                        setFrag(1, userEmail);
                         break;
                     case R.id.action_night:
-                        setFrag(2, userID);
+                        setFrag(2, userEmail);
                         break;
                     case R.id.action_mood:
-                        setFrag(3, userID);
+                        setFrag(3, userEmail);
                         break;
                     case R.id.action_person:
-                        setFrag(4, userID);
+                        setFrag(4, userEmail);
                         break;
                 }
                 return true;
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         frag3 = new Frag3();
         frag4 = new Frag4();
         frag5 = new Frag5();
-        setFrag(0, userID); //Initialize frag1 as main
+        setFrag(0, userEmail); //Initialize frag1 as main
     }
 
     private void setFrag(int n, String userID){

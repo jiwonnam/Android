@@ -2,6 +2,7 @@ package com.example.test1;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -18,11 +19,23 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignUpNew extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -31,6 +44,8 @@ public class SignUpNew extends AppCompatActivity implements GoogleApiClient.OnCo
     private FirebaseAuth auth; // 파이어베이스 인증 객체
     private GoogleApiClient googleApiClient; // 구글 API 클라이언트 객체
     private static final int REQ_SIGN_GOOGLE = 100; // 구글 로그인 결과 코드
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private static final String TAG = "SignUpNew";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,8 +108,46 @@ public class SignUpNew extends AppCompatActivity implements GoogleApiClient.OnCo
                         if(task.isSuccessful()){
                             Toast.makeText(SignUpNew.this, "Login Success", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            //ref = db.collection("users");
+                            //Query query = ref.whereEqualTo("email", account.getEmail());
                             //Intent intent = new Intent(Login_Activity.this, MainActivity.class);
-                            intent.putExtra("userID", account.getDisplayName());
+                            db.collection("users")
+                                    .whereEqualTo("email", account.getEmail())
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if (task.isSuccessful()) {
+                                                QuerySnapshot document = task.getResult();
+                                                if (document.isEmpty()) {
+                                                    Map<String, Object> user = new HashMap<>();
+                                                    user.put("email", account.getEmail());
+                                                    user.put("name", account.getDisplayName());
+                                                    db.collection("users")
+                                                            .add(user)
+                                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                                @Override
+                                                                public void onSuccess(DocumentReference documentReference) {
+                                                                    Log.d(TAG,"Error adding document");
+                                                                    Toast.makeText(SignUpNew.this, "DB updated", Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            })
+                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    Log.w(TAG,"Error adding document", e);
+                                                                    //Toast.makeText(SignUpNew.this, "DB add Failure",  Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            });
+                                                } else {
+                                                    Log.d(TAG, "already have data");
+                                                }
+                                            } else {
+                                                Log.d(TAG, "Task is not successful");
+                                            }
+                                        }
+                                    });
+                            intent.putExtra("userEmail", account.getEmail());
                             // intent.putExtra("photoUrl", String.valueOf(account.getPhotoUrl()));
                             startActivity(intent);
                         } else {
@@ -110,3 +163,4 @@ public class SignUpNew extends AppCompatActivity implements GoogleApiClient.OnCo
         Toast.makeText(SignUpNew.this, "Connection Failure", Toast.LENGTH_SHORT).show();
     }
 }
+

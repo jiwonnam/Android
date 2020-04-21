@@ -49,8 +49,8 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
                 String curName = holder.iv_name1.getText().toString();
                 Toast.makeText(v.getContext(), curName, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(v.getContext(), Recycler_result.class);
-                String key = holder.iv_name1.getText().toString();
-                intent.putExtra("name", key);
+                //String key = holder.iv_name1.getText().toString();
+                intent.putExtra("name", curName);
                 intent.putExtra("music", arrayList.get(position).getMediaPlayer1());
                 v.getContext().startActivity(intent);
             }

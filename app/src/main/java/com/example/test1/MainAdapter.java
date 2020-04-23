@@ -1,16 +1,24 @@
 package com.example.test1;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.textclassifier.TextClassifierEvent;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -19,9 +27,12 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
 
 
     private ArrayList<MainData> arrayList;
+    Context context;
     MediaPlayer mediaPlayer;
+    public final static String SHARE_VIEW_NAME = "SHARE_VIEW_NAME";
 
-    public MainAdapter(ArrayList<MainData> arrayList) {
+    public MainAdapter(Context context, ArrayList<MainData> arrayList) {
+        this.context = context;
         this.arrayList = arrayList;
     }
 
@@ -44,15 +55,25 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
 
         holder.itemView.setTag(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
                 String curName = holder.iv_name1.getText().toString();
-                Toast.makeText(v.getContext(), curName, Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(v.getContext(), Recycler_result.class);
+                //Toast.makeText(context, curName, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(v.getContext(), curName, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, Transition_animation.class);
+                //Intent intent = new Intent(v.getContext(), Recycler_result.class);
                 //String key = holder.iv_name1.getText().toString();
                 intent.putExtra("name", curName);
+                intent.putExtra("image", arrayList.get(position).getIv_profile1());
                 intent.putExtra("music", arrayList.get(position).getMediaPlayer1());
-                v.getContext().startActivity(intent);
+                //Activity activity = (Activity) context;
+                //activity.startActivity(intent);
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, holder.itemView, SHARE_VIEW_NAME);
+                context.startActivity(intent, options.toBundle());
+                //((Activity)context).overridePendingTransition(R.anim.slide_translate, android.R.anim.fade_out);
+                //v.getContext().startActivity(intent);
+                //activity.overridePendingTransition(R.anim.slide_translate, android.R.anim.fade_in);
             }
         });
 

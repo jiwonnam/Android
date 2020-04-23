@@ -11,9 +11,9 @@ public class MainData {
     /*private int iv_profile2;
     private int iv_profile3;
     private int iv_profile4;*/
-    private int mediaPlayer1;
+    private String mediaPlayer1;
 
-    public MainData(int iv_profile1, String iv_name1, int mediaPlayer1){
+    public MainData(int iv_profile1, String iv_name1, String mediaPlayer1){
         this.iv_profile1 = iv_profile1;
         this.iv_name1 = iv_name1;
         this.mediaPlayer1 = mediaPlayer1;
@@ -39,11 +39,11 @@ public class MainData {
         this.iv_name1 = iv_name1;
     }
 
-    public int getMediaPlayer1() {
+    public String getMediaPlayer1() {
         return mediaPlayer1;
     }
 
-    public void setMediaPlayer1(int mediaPlayer1) {
+    public void setMediaPlayer1(String mediaPlayer1) {
         this.mediaPlayer1 = mediaPlayer1;
     }
 

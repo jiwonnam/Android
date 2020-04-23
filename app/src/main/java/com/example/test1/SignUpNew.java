@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -68,6 +69,8 @@ public class SignUpNew extends AppCompatActivity implements GoogleApiClient.OnCo
                 .build();
 
 
+        TextView textView = (TextView)btn_google.getChildAt(0);
+        textView.setText("Google로 시작하기");
         btn_google = findViewById(R.id.btn_google);
         btn_google.setOnClickListener(new View.OnClickListener() {
             @Override

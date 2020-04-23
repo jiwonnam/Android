@@ -2,6 +2,8 @@ package com.example.test1;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -9,6 +11,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -18,7 +22,10 @@ import android.os.Environment;
 import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
@@ -36,12 +43,14 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Path;
 
 import static java.lang.Integer.parseInt;
 
 public class Recycler_result extends AppCompatActivity {
 
-    TextView textView;
+    FrameLayout frame;
+    //TextView textView;
     TextView playTime;
     MediaPlayer mediaPlayer;
     //Button btn_download;
@@ -52,13 +61,12 @@ public class Recycler_result extends AppCompatActivity {
     SeekBar seekBar;
     Thread thread;
     //boolean isPlaying = false;
-
     private ProgressDialog progressBar;
-
     static final int PERMISSION_REQUEST_CODE = 1;
     String[] PERMISSIONS = {"android.permission.READ_EXTERNAL_STORAGE","android.permission.WRITE_EXTERNAL_STORAGE"};
     private File outputFile; //파일명까지 포함한 경로
     private File path;//디렉토리경로
+
 
     private boolean hasPermissions(String[] permissions) {
         int res = 0;
@@ -74,14 +82,12 @@ public class Recycler_result extends AppCompatActivity {
         return true;
     }
 
-
     private void requestNecessaryPermissions(String[] permissions) {
         //마시멜로( API 23 )이상에서 런타임 퍼미션(Runtime Permission) 요청
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(permissions, PERMISSION_REQUEST_CODE);
         }
     }
-
 
     @Override
     protected void onDestroy() {
@@ -100,10 +106,12 @@ public class Recycler_result extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler_result);
 
-        Intent intent = getIntent();
-        textView = findViewById(R.id.textView2);
-        String key = intent.getStringExtra("name");
-        textView.setText(key);
+        frame = (FrameLayout)findViewById(R.id.path_frame);
+        View view = new Draw(getApplication());
+        Animation animation1 = AnimationUtils.loadAnimation(getApplication(), R.anim.translate);
+        view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        frame.addView(view);
+        //frame.startAnimation(animation1);
 
         if (!hasPermissions(PERMISSIONS)) { //퍼미션 허가를 했었는지 여부를 확인
             requestNecessaryPermissions(PERMISSIONS);//퍼미션 허가안되어 있다면 사용자에게 요청
@@ -122,7 +130,8 @@ public class Recycler_result extends AppCompatActivity {
         playTime = findViewById(R.id.playtime);
 
 
-        final String fileURL = "http://192.168.1.6/meditation.mp3";
+        Intent intent = getIntent();
+        final String fileURL = intent.getStringExtra("music");
         path= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         outputFile= new File(path, "meditation.mp3"); //파일명까지 포함함 경로의 File 객체 생성
 
@@ -339,7 +348,7 @@ public class Recycler_result extends AppCompatActivity {
         thread.start();
     }
 
-        @Override
+    @Override
     public void onRequestPermissionsResult(int permsRequestCode, String[] permissions, int[] grantResults){
         switch(permsRequestCode){
 

@@ -80,31 +80,31 @@ public class Frag2 extends Fragment {
         recyclerView.setLayoutManager(gridLayoutManager);
 
         arrayList = new ArrayList<>();
-        mainAdapter = new MainAdapter(arrayList);
+        mainAdapter = new MainAdapter(getContext(), arrayList);
         recyclerView.setAdapter(mainAdapter);
 
         // List 1
-        MainData mainData = new MainData(R.drawable.flower1, "flower1", R.raw.beauty_beast);
+        MainData mainData = new MainData(R.drawable.meditation1, "flower1", "http://192.168.1.6/meditation.mp3");
         arrayList.add(mainData);
 
         // List 2
-        mainData = new MainData(R.drawable.flower2,"flower2", R.raw.test);
+        mainData = new MainData(R.drawable.meditation2,"flower2", "http://192.168.1.6/meditation.mp3");
         arrayList.add(mainData);
 
         // List 3
-        mainData = new MainData(R.drawable.flower3,"flower3",R.raw.beauty_beast);
+        mainData = new MainData(R.drawable.flower3,"flower3", "http://192.168.1.6/meditation.mp3");
         arrayList.add(mainData);
 
         // List 4
-        mainData = new MainData(R.drawable.flower4,"flower4",R.raw.test);
+        mainData = new MainData(R.drawable.flower4,"flower4", "http://192.168.1.6/meditation.mp3");
         arrayList.add(mainData);
 
         // List 5
-        mainData = new MainData(R.drawable.flower5,"flower5",R.raw.beauty_beast);
+        mainData = new MainData(R.drawable.flower5,"flower5", "http://192.168.1.6/meditation.mp3");
         arrayList.add(mainData);
 
         // List 6
-        mainData = new MainData(R.drawable.flower6, "flower6",R.raw.test);
+        mainData = new MainData(R.drawable.flower6, "flower6", "http://192.168.1.6/meditation.mp3");
         arrayList.add(mainData);
 
         mainAdapter.notifyDataSetChanged();

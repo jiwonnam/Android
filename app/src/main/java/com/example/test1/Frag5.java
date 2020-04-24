@@ -34,8 +34,9 @@ public class Frag5 extends Fragment {
         btn_logout = view.findViewById(R.id.btn_logout);
 
         Bundle bundle = getArguments();
-        String userID = bundle.getString("userID");
-        tv_id.setText(userID);
+        UserInfo user = bundle.getParcelable("userInfo");
+        //String userID = bundle.getString("userID");
+        tv_id.setText(user.getEmail());
 
         btn_logout.setOnClickListener(new View.OnClickListener() {
             @Override

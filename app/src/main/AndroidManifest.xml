@@ -13,20 +13,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Transition_animation" android:theme="@style/BaseAppTheme"></activity>
-        <activity android:name=".SignInNew" />
-        <activity android:name=".Recycler_result" />
-        <activity android:name=".Register_Activity" />
-        <activity android:name=".Login_Activity" />
-        <activity android:name=".SignUpNew">
+        <activity android:name=".StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".Transition_animation"
+            android:theme="@style/BaseAppTheme" />
+        <activity android:name=".SignInNew" />
+        <activity android:name=".Recycler_result" />
+        <activity android:name=".Register_Activity" />
+        <activity android:name=".Login_Activity" />
+        <activity android:name=".SignUpNew"/>
         <activity android:name=".MainActivity" />
     </application>
-
 
 </manifest>

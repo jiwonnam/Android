@@ -1,9 +1,6 @@
 package com.example.test1;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatImageButton;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -11,29 +8,24 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.api.Http;
-
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -42,18 +34,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
-import java.nio.file.Path;
 
 import static java.lang.Integer.parseInt;
 
 public class Recycler_result extends AppCompatActivity {
 
     FrameLayout frame;
-    //TextView textView;
     TextView playTime;
     MediaPlayer mediaPlayer;
-    //Button btn_download;
     ImageView btn_pause;
     ImageView btn_replay;
     ImageView btn_forward;
@@ -201,8 +189,6 @@ public class Recycler_result extends AppCompatActivity {
             }
         });*/
 
-        path= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        outputFile= new File(path, "meditation.mp3");
         MusicUri = Uri.fromFile(outputFile);
         mediaPlayer = MediaPlayer.create(getApplicationContext(), MusicUri);
 
@@ -221,6 +207,19 @@ public class Recycler_result extends AppCompatActivity {
                             int s = (progress % 60000) / 1000;*/
                 String strTime = String.format("%02d:%02d", m, s);
                 playTime.setText(strTime);
+                if(m == 0 && s == 0){
+                    if(!mediaPlayer.isPlaying()){
+                        btn_pause.setImageResource(R.drawable.ic_play_circle_outline_black_24dp);
+                        Toast.makeText(getApplicationContext(), "Congratulation finishing session", Toast.LENGTH_SHORT).show();
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                finish();
+                            }
+                        }, 5000);
+                    }
+                }
             }
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -279,52 +278,6 @@ public class Recycler_result extends AppCompatActivity {
             }
         });
 
-        /*btn_start.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                path= Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-                outputFile= new File(path, "meditation.mp3");
-                if(outputFile.exists()){
-                    //MusicUri = Uri.fromFile(new File(outputFile.getPath()));
-                    MusicUri = Uri.fromFile(outputFile);
-                    if(isPlaying)
-                    {
-
-                    }else{
-                        mediaPlayer = MediaPlayer.create(getApplicationContext(), MusicUri);
-                        isPlaying = true;
-                    }
-
-                    seekBar.setMax(mediaPlayer.getDuration());
-                    seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-                        @Override
-                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                            if(fromUser) {
-                                mediaPlayer.seekTo(progress);
-                            }
-                            int remain_time = seekBar.getMax() - progress;
-                            int m = remain_time / 60000;
-                            int s = (remain_time % 60000) / 1000;
-                            String strTime = String.format("%02d:%02d", m, s);
-                            playTime.setText(strTime);
-                        }
-                        @Override
-                        public void onStartTrackingTouch(SeekBar seekBar) {
-                        }
-                        @Override
-                        public void onStopTrackingTouch(SeekBar seekBar) {
-                        }
-                    });
-                    mediaPlayer.start();
-                    Thread();
-
-                }else {
-                    Toast.makeText(getApplicationContext(), "Download first", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });*/
 
 }
 
@@ -401,35 +354,6 @@ public class Recycler_result extends AppCompatActivity {
             startActivity(Intent.createChooser(videoIntent, null));
         }*/
     }
-
-        /*Intent intent = getIntent();
-        textView = findViewById(R.id.textView2);
-        String key = intent.getStringExtra("name");
-        textView.setText(key);
-
-        music = intent.getIntExtra("music", R.raw.test);// if fail, set R.raw.test as default
-
-        btn_download = findViewById(R.id.btn_download);
-
-
-
-
-        btn_start = findViewById(R.id.btn_start);
-        btn_pause = findViewById(R.id.btn_pause);
-        btn_start.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mediaPlayer = MediaPlayer.create(getApplicationContext(), music);
-                mediaPlayer.start();
-            }
-        });
-        btn_pause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mediaPlayer.stop();
-                mediaPlayer.reset();
-            }
-        });*/
 
     private class DownloadFilesTask extends AsyncTask<String, String, Long> {
 

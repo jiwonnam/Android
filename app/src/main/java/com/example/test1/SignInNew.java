@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
@@ -41,7 +41,6 @@ public class SignInNew extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signin_new);
-
 
         et_email = findViewById(R.id.et_email);
         et_pass = findViewById(R.id.et_pass);
@@ -118,7 +117,10 @@ public class SignInNew extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
+                            Toast.makeText(SignInNew.this, "Login Success", Toast.LENGTH_SHORT).show();
+                            final Intent intent = new Intent(SignInNew.this, MainActivity.class);
                             final FirebaseUser firebaseUser = mAuth.getCurrentUser();
+
                             db.collection("users")
                                     .whereEqualTo("email", firebaseUser.getEmail())
                                     .get()
@@ -150,15 +152,34 @@ public class SignInNew extends AppCompatActivity {
                                                 } else {
                                                     Log.d(TAG, "already have data");
                                                 }
+                                                try{
+                                                    db.collection("users")
+                                                            .whereEqualTo("email", firebaseUser.getEmail())
+                                                            .get()
+                                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                    if(task.isSuccessful()){
+                                                                        //이 경우 task.getResult의 Size는 항상 1이라서 for문 돌려도 문제없음
+                                                                        for(QueryDocumentSnapshot userDocument : task.getResult()){
+                                                                            UserInfo user = userDocument.toObject(UserInfo.class);
+                                                                            intent.putExtra("userInfo", user);
+                                                                            startActivity(intent);
+                                                                        }
+                                                                    }
+                                                                }
+                                                            });
+                                                }catch (Exception e){
+                                                    Toast.makeText(SignInNew.this, "Error: 다시 로그인", Toast.LENGTH_SHORT).show();
+                                                }
                                             } else {
                                                 Log.d(TAG, "Task is not successful");
                                             }
                                         }
                                     });
-                            Intent intent = new Intent(SignInNew.this, MainActivity.class);
-                            intent.putExtra("userEmail", firebaseUser.getEmail());
-                            startActivity(intent);
-                            //updateUI(user);
+
+                            //intent.putExtra("userEmail", firebaseUser.getEmail());
+                            //startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.
                             Toast.makeText(SignInNew.this, "Login failed.",
@@ -169,11 +190,6 @@ public class SignInNew extends AppCompatActivity {
                     }
                 });
         // [END sign_in_with_email]
-    }
-
-    private void signOut() {
-        mAuth.signOut();
-        //updateUI(null);
     }
 
     private boolean validateForm(String email) {
@@ -219,6 +235,5 @@ public class SignInNew extends AppCompatActivity {
                 });
         // [END send_email_verification]
     }
-
 
 }

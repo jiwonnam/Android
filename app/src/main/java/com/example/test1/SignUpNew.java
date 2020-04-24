@@ -7,11 +7,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -26,12 +24,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -47,6 +43,7 @@ public class SignUpNew extends AppCompatActivity implements GoogleApiClient.OnCo
     private static final int REQ_SIGN_GOOGLE = 100; // 구글 로그인 결과 코드
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static final String TAG = "SignUpNew";
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,7 +76,6 @@ public class SignUpNew extends AppCompatActivity implements GoogleApiClient.OnCo
                 startActivityForResult(intent, REQ_SIGN_GOOGLE);
             }
         });
-
         btn_email.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,12 +106,13 @@ public class SignUpNew extends AppCompatActivity implements GoogleApiClient.OnCo
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             Toast.makeText(SignUpNew.this, "Login Success", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            final Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            final FirebaseUser firebaseUser =auth.getCurrentUser();
                             //ref = db.collection("users");
                             //Query query = ref.whereEqualTo("email", account.getEmail());
                             //Intent intent = new Intent(Login_Activity.this, MainActivity.class);
                             db.collection("users")
-                                    .whereEqualTo("email", account.getEmail())
+                                    .whereEqualTo("email", firebaseUser.getEmail())
                                     .get()
                                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                         @Override
@@ -124,8 +121,8 @@ public class SignUpNew extends AppCompatActivity implements GoogleApiClient.OnCo
                                                 QuerySnapshot document = task.getResult();
                                                 if (document.isEmpty()) {
                                                     Map<String, Object> user = new HashMap<>();
-                                                    user.put("email", account.getEmail());
-                                                    user.put("name", account.getDisplayName());
+                                                    user.put("email", firebaseUser.getEmail());
+                                                    user.put("name", firebaseUser.getDisplayName());
                                                     db.collection("users")
                                                             .add(user)
                                                             .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -145,14 +142,29 @@ public class SignUpNew extends AppCompatActivity implements GoogleApiClient.OnCo
                                                 } else {
                                                     Log.d(TAG, "already have data");
                                                 }
+                                                //Toast.makeText(SignUpNew.this, "Test", Toast.LENGTH_SHORT).show();
+                                                db.collection("users")
+                                                        .whereEqualTo("email", firebaseUser.getEmail())
+                                                        .get()
+                                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                if(task.isSuccessful()){
+                                                                    //이 경우 task.getResult의 Size는 항상 1이라서 for문 돌려도 문제없음
+                                                                    for(QueryDocumentSnapshot userDocument : task.getResult()){
+                                                                        UserInfo user = userDocument.toObject(UserInfo.class);
+                                                                        intent.putExtra("userInfo", user);
+                                                                        startActivity(intent);
+                                                                    }
+                                                                }
+                                                            }
+                                                        });
                                             } else {
                                                 Log.d(TAG, "Task is not successful");
                                             }
                                         }
                                     });
-                            intent.putExtra("userEmail", account.getEmail());
-                            // intent.putExtra("photoUrl", String.valueOf(account.getPhotoUrl()));
-                            startActivity(intent);
+
                         } else {
                             Toast.makeText(SignUpNew.this, "Login Failure", Toast.LENGTH_SHORT).show();
                         }
@@ -165,5 +177,6 @@ public class SignUpNew extends AppCompatActivity implements GoogleApiClient.OnCo
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Toast.makeText(SignUpNew.this, "Connection Failure", Toast.LENGTH_SHORT).show();
     }
+
 }
 

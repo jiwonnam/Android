@@ -1,6 +1,8 @@
 package com.example.test1;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -133,6 +135,9 @@ public class SignInNew extends AppCompatActivity {
                                                     Map<String, Object> user = new HashMap<>();
                                                     user.put("email", firebaseUser.getEmail());
                                                     user.put("name", firebaseUser.getDisplayName());
+                                                    Bitmap image = BitmapFactory.decodeResource(getResources(),
+                                                            R.drawable.ic_person_black_24dp);
+                                                    user.put("image", image);
                                                     db.collection("users")
                                                             .add(user)
                                                             .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {

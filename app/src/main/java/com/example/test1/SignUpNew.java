@@ -1,6 +1,11 @@
 package com.example.test1;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +15,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
+
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -120,9 +128,16 @@ public class SignUpNew extends AppCompatActivity implements GoogleApiClient.OnCo
                                             if (task.isSuccessful()) {
                                                 QuerySnapshot document = task.getResult();
                                                 if (document.isEmpty()) {
-                                                    Map<String, Object> user = new HashMap<>();
-                                                    user.put("email", firebaseUser.getEmail());
-                                                    user.put("name", firebaseUser.getDisplayName());
+                                                    //Map<String, Object> user = new HashMap<>();
+                                                    UserInfo user = new UserInfo();
+                                                    user.setEmail(firebaseUser.getEmail());
+                                                    user.setName(firebaseUser.getDisplayName());
+                                                    //Drawable drawable = getResources().getDrawable(R.drawable.profile_default);
+                                                    //Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+                                                    //user.setImage(bitmap);
+                                                    //user.setImage(R.drawable.profile_default);
+                                                    user.setImage("gs://loginexample-19bd9.appspot.com/profile_default.png");
+
                                                     db.collection("users")
                                                             .add(user)
                                                             .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -136,7 +151,8 @@ public class SignUpNew extends AppCompatActivity implements GoogleApiClient.OnCo
                                                                 @Override
                                                                 public void onFailure(@NonNull Exception e) {
                                                                     Log.w(TAG,"Error adding document", e);
-                                                                    //Toast.makeText(SignUpNew.this, "DB add Failure",  Toast.LENGTH_SHORT).show();
+                                                                    Toast.makeText(SignUpNew.this, "Error: DB add Failure",  Toast.LENGTH_SHORT).show();
+                                                                    ActivityCompat.finishAffinity(SignUpNew.this);
                                                                 }
                                                             });
                                                 } else {
@@ -178,5 +194,9 @@ public class SignUpNew extends AppCompatActivity implements GoogleApiClient.OnCo
         Toast.makeText(SignUpNew.this, "Connection Failure", Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onBackPressed() {
+        ActivityCompat.finishAffinity(this);
+    }
 }
 

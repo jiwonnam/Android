@@ -1,22 +1,29 @@
 package com.example.test1;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class UserInfo implements Parcelable {
     private String email;
     private String name;
+    //private Bitmap image;
+    private String image;
 
     public UserInfo(){}
 
-    public UserInfo(String email, String name) {
+    public UserInfo(String email, String name, String image) {
         this.email = email;
         this.name = name;
+        this.image = image;
     }
 
     public UserInfo(Parcel parcel){
         this.email = parcel.readString();
         this.name = parcel.readString();
+        //this.image = parcel.readParcelable(null);
+        this.image = parcel.readString();
     }
 
     public static final Creator<UserInfo> CREATOR = new Creator<UserInfo>() {
@@ -40,6 +47,8 @@ public class UserInfo implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.email);
         dest.writeString(this.name);
+        //dest.writeParcelable(this.image, flags);
+        dest.writeString(this.image);
     }
 
     public String getEmail() {
@@ -56,5 +65,13 @@ public class UserInfo implements Parcelable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

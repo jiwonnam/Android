@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <PreferenceCategory
+        android:title = "Settings"
+        android:key="key_category"
+        app:iconSpaceReserved="false">
+
+        <Preference
+            android:title = "Name"
+            android:key="key_userName"/>
+
+        <Preference
+            android:title = "LogOut"
+            android:key="logout"/>
+
+        <!--<CheckBoxPreference
+            android:title="체크박스"
+            />
+        <RingtonePreference
+            android:title="링톤"
+            />
+        <SwitchPreference
+            android:title="스위치"
+            />-->
+
+    </PreferenceCategory>
+</PreferenceScreen>

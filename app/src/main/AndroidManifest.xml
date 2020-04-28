@@ -13,6 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".SettingActivity"></activity>
         <activity android:name=".StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,7 +28,7 @@
         <activity android:name=".Recycler_result" />
         <activity android:name=".Register_Activity" />
         <activity android:name=".Login_Activity" />
-        <activity android:name=".SignUpNew"/>
+        <activity android:name=".SignUpNew" />
         <activity android:name=".MainActivity" />
     </application>
 

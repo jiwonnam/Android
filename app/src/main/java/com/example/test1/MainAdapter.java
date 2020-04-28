@@ -59,11 +59,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
             @Override
             public void onClick(View v) {
                 String curName = holder.iv_name1.getText().toString();
-                //Toast.makeText(context, curName, Toast.LENGTH_SHORT).show();
-                //Toast.makeText(v.getContext(), curName, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(context, Transition_animation.class);
-                //Intent intent = new Intent(v.getContext(), Recycler_result.class);
-                //String key = holder.iv_name1.getText().toString();
                 intent.putExtra("name", curName);
                 intent.putExtra("image", arrayList.get(position).getIv_profile1());
                 intent.putExtra("music", arrayList.get(position).getMediaPlayer1());
@@ -71,9 +67,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.CustomViewHold
                 //activity.startActivity(intent);
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, holder.itemView, SHARE_VIEW_NAME);
                 context.startActivity(intent, options.toBundle());
-                //((Activity)context).overridePendingTransition(R.anim.slide_translate, android.R.anim.fade_out);
-                //v.getContext().startActivity(intent);
-                //activity.overridePendingTransition(R.anim.slide_translate, android.R.anim.fade_in);
             }
         });
 

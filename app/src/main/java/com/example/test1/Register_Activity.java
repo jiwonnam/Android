@@ -17,6 +17,8 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
+//No Use
 public class Register_Activity extends AppCompatActivity {
 
     private EditText et_id, et_pass, et_name, et_age;

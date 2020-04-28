@@ -27,7 +27,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-
+//No Use
 public class Login_Activity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private EditText et_id, et_pass;

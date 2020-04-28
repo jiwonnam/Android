@@ -24,7 +24,7 @@
 
     <TextView
         android:id="@+id/tv_id"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="ID"
@@ -34,15 +34,21 @@
         app:layout_constraintTop_toBottomOf="@+id/iv_profile"
         android:gravity="center_horizontal" />
 
-    <Button
-        android:id="@+id/btn_logout"
-        android:layout_width="0dp"
+
+    <ImageButton
+        android:id="@+id/btn_set"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="Log out"
-        app:layout_constraintEnd_toEndOf="@+id/tv_id"
-        app:layout_constraintStart_toStartOf="@+id/tv_id"
-        app:layout_constraintTop_toBottomOf="@+id/tv_id" />
+        android:layout_marginStart="300dp"
+        android:layout_marginLeft="300dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:background="#FFFFFF"
+        android:src="@drawable/ic_settings_black_24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

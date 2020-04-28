@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,7 +54,7 @@ public class Frag5 extends Fragment {
     private View view;
     TextView tv_id;
     CircleImageView imageView;
-    Button btn_logout;
+    ImageButton btn_set;
     private final int GET_GALLERY_IMAGE = 200;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -71,7 +72,7 @@ public class Frag5 extends Fragment {
         view = inflater.inflate(R.layout.frag5, container, false);
         tv_id = view.findViewById(R.id.tv_id);
         imageView = view.findViewById(R.id.iv_profile);
-        btn_logout = view.findViewById(R.id.btn_logout);
+        btn_set = view.findViewById(R.id.btn_set);
         Bundle bundle = getArguments();
         user = bundle.getParcelable("userInfo");
 
@@ -84,7 +85,7 @@ public class Frag5 extends Fragment {
                 .load(storageRef)
                 .into(imageView);
 
-        tv_id.setText(user.getEmail());
+        tv_id.setText(user.getName());
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,23 +101,16 @@ public class Frag5 extends Fragment {
             }
         });
 
-        btn_logout.setOnClickListener(new View.OnClickListener() {
+        btn_set.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-                GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestIdToken(getActivity().getString(R.string.default_web_client_id))
-                        .requestEmail()
-                        .build(); // fragment는 activity의 자식이라 getActivity가 필요함
-                GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(getActivity(),options);
-                googleSignInClient.signOut();
-
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(getActivity(), SignUpNew.class));
-
+                Intent intent = new Intent(getActivity(), SettingActivity.class);
+                intent.putExtra("userInfo", user);
+                startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.slide_up, R.anim.slide_down);
             }
         });
+
 
         return view;
     }

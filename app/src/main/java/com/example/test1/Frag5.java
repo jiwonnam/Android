@@ -21,6 +21,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.loader.content.CursorLoader;
 
 import com.bumptech.glide.module.AppGlideModule;
@@ -31,6 +33,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -55,12 +58,16 @@ public class Frag5 extends Fragment {
     TextView tv_id;
     CircleImageView imageView;
     ImageButton btn_set;
+    TabLayout tab_layout;
     private final int GET_GALLERY_IMAGE = 200;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseStorage storage = FirebaseStorage.getInstance();
     UserInfo user;
-    Bitmap bitmap_image;
     StorageReference storageRef;
+    private FragmentManager fm;
+    private FragmentTransaction ft;
+    private Frag_skill frag_skill;
+    private Frag_badge frag_badge;
 
     public Frag5(){
 
@@ -70,15 +77,15 @@ public class Frag5 extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         view = inflater.inflate(R.layout.frag5, container, false);
+        tab_layout = view.findViewById(R.id.tab_layout);
+
         tv_id = view.findViewById(R.id.tv_id);
         imageView = view.findViewById(R.id.iv_profile);
         btn_set = view.findViewById(R.id.btn_set);
-        Bundle bundle = getArguments();
-        user = bundle.getParcelable("userInfo");
+        Bundle get_bundle = getArguments();
+        user = get_bundle.getParcelable("userInfo");
 
-        /*Drawable drawable = getResources().getDrawable(user.getImage());
-        Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-        imageView.setImageBitmap(bitmap);*/
+
         storageRef = storage.getReferenceFromUrl(user.getImage());
         //Toast.makeText(getContext(), storageRef.getName(), Toast.LENGTH_SHORT).show()
         GlideApp.with(getContext())
@@ -111,6 +118,41 @@ public class Frag5 extends Fragment {
             }
         });
 
+        frag_skill = new Frag_skill();
+        frag_badge = new Frag_badge();
+        setFrag(0,user);
+
+        tab_layout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int pos = tab.getPosition();
+                switch (pos){
+                    case 0:
+                        setFrag(0, user);
+                        break;
+                    case 1:
+                        setFrag(1, user);
+                        break;
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                int pos = tab.getPosition();
+                switch (pos){
+                    case 0:
+                        setFrag(0, user);
+                        break;
+                    case 1:
+                        setFrag(1, user);
+                        break;
+                }
+            }
+        });
 
         return view;
     }
@@ -165,5 +207,27 @@ public class Frag5 extends Fragment {
         cursor.moveToFirst();
 
         return cursor.getString(index);
+    }
+
+
+    private void setFrag(int n, UserInfo user){
+        fm = getActivity().getSupportFragmentManager();
+        ft = fm.beginTransaction();
+
+        Bundle put_bundle = new Bundle();
+        put_bundle.putParcelable("userInfo", user);
+
+        switch (n) {
+            case 0:
+                ft.replace(R.id.info_frame, frag_skill);
+                frag_skill.setArguments(put_bundle);
+                ft.commit();
+                break;
+            case 1:
+                ft.replace(R.id.info_frame, frag_badge);
+                frag_badge.setArguments(put_bundle);
+                ft.commit();
+                break;
+        }
     }
 }

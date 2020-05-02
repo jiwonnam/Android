@@ -22,7 +22,6 @@ public class Frag2 extends Fragment {
     private GridLayoutManager gridLayoutManager;
 
     private View view;
-    //MediaPlayer mediaPlayer;
     private ImageView im_view1;
 
 
@@ -44,35 +43,6 @@ public class Frag2 extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.frag2, container, false);
 
-        /*im_view1 = view.findViewById(R.id.iv_profile1);
-        mediaPlayer = MediaPlayer.create(getActivity(), R.raw.beauty_beast);
-        im_view1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                if(mediaPlayer.isPlaying())
-                {
-                    mediaPlayer.stop();
-                    mediaPlayer.reset();
-                }else {
-                    mediaPlayer = MediaPlayer.create(getActivity(), R.raw.beauty_beast);
-                    mediaPlayer.start();
-                }
-            }
-        });*/
-
-        /*im_view1.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if(mediaPlayer.isPlaying()) {
-                    mediaPlayer.stop();
-                    mediaPlayer.reset();
-                    mediaPlayer.release();
-                }
-                return true;
-            }
-        });*/
 
         recyclerView = (RecyclerView)view.findViewById(R.id.rv);
         gridLayoutManager = new GridLayoutManager(getActivity(),2);
